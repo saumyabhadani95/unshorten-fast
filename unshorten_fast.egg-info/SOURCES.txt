@@ -1,9 +1,0 @@
-README.md
-pyproject.toml
-unshorten_fast/__init__.py
-unshorten_fast/api.py
-unshorten_fast.egg-info/PKG-INFO
-unshorten_fast.egg-info/SOURCES.txt
-unshorten_fast.egg-info/dependency_links.txt
-unshorten_fast.egg-info/entry_points.txt
-unshorten_fast.egg-info/top_level.txt
