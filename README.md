@@ -1,4 +1,4 @@
-# unshorten_fast
+# unshorten-fast
 
 Expand URLs from shortening services (e.g. bit.ly) _fast_. Uses
 [aiohttp](https://docs.aiohttp.org/) to run multiple web requests
