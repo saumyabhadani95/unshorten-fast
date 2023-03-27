@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "unshorten_fast"
+version = "0.0.1"
+authors = [
+    { name="Giovanni Luca Ciampaglia", email="gciampag@umd.edu" },
+]
+description = "Expands URLs from shortening services fast"
+readme = "README.md"
+requires-python = ">= 3.7"
+# specified in setuptools script
+dynamic = ["dependencies"]
+
+[project.scripts]
+unshorten = "unshorten_fast.api:main"
+
+# [project.urls]
+# "Homepage" = "https://github.com/CSDL-USF/infodiversity-experiment"
+# "Bug Tracker" = "https://github.com/CSDL-USF/infodiversity-experiment/issues"
