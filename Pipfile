@@ -10,6 +10,7 @@ cchardet = "*"
 brotli = "*"
 
 [dev-packages]
+ipython = "*"
 
 [requires]
 python_version = "3.10"
