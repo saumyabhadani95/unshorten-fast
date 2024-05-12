@@ -12,3 +12,8 @@ concurrently.
 - Flexible inclusion criteria:
   + User-defined domain inclusion list;
   - URL length;
+
+## How to run:
+
+- cd unshorten_fast
+- python api.py shorten_URL_input.txt shorten_URL_output.txt
