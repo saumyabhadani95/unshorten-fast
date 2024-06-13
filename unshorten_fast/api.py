@@ -23,6 +23,17 @@ import logging
 from urllib.parse import urlsplit
 import re
 
+
+import os
+from dotenv import load_dotenv
+import redis
+
+# Access environment variables
+load_dotenv()
+redis_host = os.getenv('REDIS_HOST')
+redis_port = os.getenv('REDIS_PORT')
+redis_password = os.getenv('REDIS_PASSWORD')
+
 TTL_DNS_CACHE = 300  # Time-to-live of DNS cache
 MAX_TCP_CONN = 50  # Throttle at max these many simultaneous connections
 TIMEOUT_TOTAL = 100  # Each request times out after these many seconds
@@ -100,9 +111,10 @@ async def unshortenone(url, session, pattern=None, maxlen=None,
     if too_long or no_match:
         _STATS["ignored"] += 1
         return url
-    if cache is not None and url in cache:
+    cached_ans = None if cache is None else cache.get(url)
+    if cached_ans is not None:
         _STATS["cached_retrieved"] += 1
-        return str(cache[url])
+        return cached_ans.decode("utf-8")
     else:
         try:
             # await asyncio.sleep(0.01)
@@ -111,10 +123,12 @@ async def unshortenone(url, session, pattern=None, maxlen=None,
             expanded_url = str(resp.url)
             if url != expanded_url:
                 _STATS['expanded'] += 1
-                if cache is not None and url not in cache:
+                # if cache is not None and url not in cache:
+                if cache is not None:
+                    cache.set(url, expanded_url)
                     # update cache if needed
                     _STATS["cached"] += 1
-                    cache[url] = expanded_url
+                    # cache[url] = expanded_url
             return expanded_url
         except (aiohttp.ClientError, asyncio.TimeoutError, UnicodeError) as e:
             _STATS["error"] += 1
@@ -207,7 +221,13 @@ def _main(args):
         if args.no_cache:
             cache = None
         else:
-            cache = {}
+            # cache = {}
+            cache = redis.Redis(
+                host=redis_host,
+                port=redis_port,
+                password=redis_password,
+                ssl=True
+            )
         tic = time.time()
         with open(args.input, encoding="utf8") as inputf:
             shorturls = (url.strip(" \n") for url in inputf)
