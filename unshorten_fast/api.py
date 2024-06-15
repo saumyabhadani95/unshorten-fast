@@ -23,7 +23,6 @@ import logging
 from urllib.parse import urlsplit
 import re
 
-
 import os
 from dotenv import load_dotenv
 import redis
@@ -222,12 +221,13 @@ def _main(args):
             cache = None
         else:
             # cache = {}
-            cache = redis.Redis(
-                host=redis_host,
-                port=redis_port,
-                password=redis_password,
-                ssl=True
-            )
+            # cache = redis.Redis(
+            #     host=redis_host,
+            #     port=redis_port,
+            #     password=redis_password,
+            #     ssl=True
+            # )
+            cache = redis.Redis(host='localhost', port=6379)
         tic = time.time()
         with open(args.input, encoding="utf8") as inputf:
             shorturls = (url.strip(" \n") for url in inputf)
@@ -238,8 +238,9 @@ def _main(args):
         toc = time.time()
         elapsed = toc - tic
         rate = len(urls) / elapsed
-        logging.info(f"Processed {len(urls)} urls in {
-                     elapsed:.2f}s ({rate:.2f} urls/s))")
+        logging.info(f"Processed {len(urls)} urls in {elapsed:.2f}s ({rate:.2f} urls/s))")
+        logging.info(f"Processed {len(urls)} urls in {elapsed:.2f}s ({rate:.2f} urls/s))")
+
     except KeyboardInterrupt:
         import sys
         print(file=sys.stderr)
@@ -247,10 +248,8 @@ def _main(args):
     finally:
         logging.info(f"Ignored: {_STATS['ignored']:.0f}")
         logging.info(f"Expanded: {_STATS['expanded']:.0f}")
-        logging.info(f"Cached: {_STATS['cached']:.0f} ({
-                     _STATS['cached_retrieved']:.0f} hits)")
-        logging.info(f"Errors: {_STATS['error']:.0f} ({
-                     _STATS['timeout']:.0f} timed out)")
+        logging.info(f"Cached: {_STATS['cached']:.0f} ({_STATS['cached_retrieved']:.0f} hits)")
+        logging.info(f"Errors: {_STATS['error']:.0f} ({_STATS['timeout']:.0f} timed out)")
 
 
 def main():
